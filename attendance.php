@@ -29,14 +29,13 @@
         $status = htmlspecialchars($_POST['status']);
         $date = date('Y-m-d H:i:s');
 
-        // Displaying the submitted data for now
-        echo "<h3>Attendance Submitted Successfully!</h3>";
-        echo "Register Number: " . $reg_no . "<br>";
-        echo "Name: " . $name . "<br>";
-        echo "Status: " . $status . "<br>";
-        echo "Date & Time: " . $date . "<br>";
-        
-        // You can add database or file saving logic here later
+        $attendance_data = $date . " | Reg: " . $reg_no . " | Name: " . $name . " | Status: " . $status . "\n";
+
+        if (file_put_contents('attendance_records.txt', $attendance_data, FILE_APPEND)) {
+            echo "<h3>Attendance Saved Successfully!</h3>";
+        } else {
+            echo "<h3>Error saving attendance.</h3>";
+        }
     }
     ?>
 </body>
