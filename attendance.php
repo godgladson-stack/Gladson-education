@@ -1,7 +1,7 @@
 <?php
 require 'db_connect.php';
 ​try {
-$stmt = $conn->query("SELECT register_number, name FROM students");
+$stmt = $conn-query("SELECT register_number, name FROM students")
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
 echo "Error fetching students: " . $e->getMessage();
