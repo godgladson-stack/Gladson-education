@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+<?php
+require 'db_connect.php';
+​try {
+$stmt = $conn->query("SELECT register_number, name FROM students");
+$students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+echo "Error fetching students: " . $e->getMessage();
+}
+?>
+​<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -23,7 +32,7 @@ button:hover { background-color: #0056b3; }
 <body>
 <div class="container">
 <h2>Mark Attendance</h2>
-<form id="attendanceForm">
+<form id="attendanceForm" action="process_attendance.php" method="POST">
 <table>
 <thead>
 <tr>
@@ -33,36 +42,23 @@ button:hover { background-color: #0056b3; }
 </tr>
 </thead>
 <tbody id="studentList">
+<?php foreach ($students as $index => $student): ?>
 <tr>
-<td>101</td>
-<td>Arun</td>
+<td><?php echo htmlspecialchars($student['register_number']); ?></td>
+<td><?php echo htmlspecialchars($student['name']); ?></td>
 <td>
 <div class="radio-group">
-<label><input type="radio" name="attendance1" value="present" class="present" required> Present</label>
-<label><input type="radio" name="attendance1" value="absent" class="absent"> Absent</label>
+<label><input type="radio" name="attendance[<?php echo $index; ?>][status]" value="present" class="present" required> Present</label>
+<label><input type="radio" name="attendance[<?php echo $index; ?>][status]" value="absent" class="absent"> Absent</label>
+<input type="hidden" name="attendance[<?php echo $index; ?>][register_number]" value="<?php echo htmlspecialchars($student['register_number']); ?>">
 </div>
 </td>
 </tr>
-<tr>
-<td>102</td>
-<td>Banu</td>
-<td>
-<div class="radio-group">
-<label><input type="radio" name="attendance2" value="present" class="present" required> Present</label>
-<label><input type="radio" name="attendance2" value="absent" class="absent"> Absent</label>
-</div>
-</td>
-</tr>
+<?php endforeach; ?>
 </tbody>
 </table>
 <button type="submit">Submit Attendance</button>
 </form>
 </div>
-<script>
-document.getElementById('attendanceForm').addEventListener('submit', function(e) {
-e.preventDefault();
-alert('Attendance are successfully submitted');
-});
-</script>
 </body>
 </html>
